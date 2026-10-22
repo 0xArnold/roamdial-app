@@ -1,0 +1,34 @@
+#!/bin/bash
+# 升级后置：装入新镜像并用新镜像重建容器（数据卷保留）。
+set -u
+
+APPDEST="${TRIM_APPDEST:-/var/apps/roamdial/target}"
+VAR_DIR="${TRIM_PKGVAR:-/var/apps/roamdial/var}"
+ERR_FILE="${TRIM_TEMP_LOGFILE:-/dev/stderr}"
+mkdir -p "${VAR_DIR}" 2>/dev/null || true
+LOG_FILE="${VAR_DIR}/roamdial-upgrade.log"
+IMAGE_TAR="${APPDEST}/images/roamdial-image.tar"
+COMPOSE_FILE="${APPDEST}/compose/docker-compose.yaml"
+IMAGE="roamdial-app:0.0.1"
+
+log() { echo "$(date '+%Y-%m-%d %H:%M:%S') - $*" >> "${LOG_FILE}" 2>/dev/null || true; }
+err() { echo "$*" > "${ERR_FILE}" 2>/dev/null || echo "$*" >&2; log "ERROR: $*"; }
+
+if [ -f "${IMAGE_TAR}" ]; then
+    docker load -i "${IMAGE_TAR}" >> "${LOG_FILE}" 2>&1 || log "docker load failed (will try existing local image)"
+else
+    log "no bundled image tar at ${IMAGE_TAR}, using local image if present"
+fi
+
+if ! docker image inspect "${IMAGE}" >/dev/null 2>&1; then
+    err "找不到镜像 ${IMAGE} 且安装包内没有镜像文件，升级中止。"
+    exit 1
+fi
+
+# 用新镜像重建容器；镜像已在本地，不会触发联网拉取
+docker compose \
+    --project-name roamdial \
+    --file "${COMPOSE_FILE}" \
+    up -d --no-build --force-recreate >> "${LOG_FILE}" 2>&1 || true
+log "upgrade_callback ok"
+exit 0

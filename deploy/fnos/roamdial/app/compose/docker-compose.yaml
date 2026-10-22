@@ -1,0 +1,15 @@
+# 由 cmd/main 自行调用（native 形态）。
+# 不用 fnOS docker-project：它会在 install_callback 的 docker load 之前就 compose up，
+# 导致回退联网拉取镜像而失败。镜像由安装时内置的 images/roamdial-image.tar 装入。
+services:
+  roamdial:
+    image: roamdial-app:0.0.1
+    container_name: roamdial
+    restart: unless-stopped
+    ports:
+      - "8621:8620"
+    environment:
+      TZ: Asia/Shanghai
+      RD_DB: /data/roamdial.db
+    volumes:
+      - "/var/apps/roamdial/shares/roamdial/data:/data"

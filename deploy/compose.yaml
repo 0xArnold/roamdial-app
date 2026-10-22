@@ -1,0 +1,14 @@
+services:
+  roamdial:
+    image: roamdial-app:0.0.1
+    pull_policy: never
+    restart: unless-stopped
+    ports:
+      - "${ROAMDIAL_PORT:-8621}:8620"
+    environment:
+      TZ: Asia/Shanghai
+      RD_DB: /data/roamdial.db
+    volumes:
+      - roamdial_data:/data
+volumes:
+  roamdial_data:

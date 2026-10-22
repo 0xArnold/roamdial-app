@@ -1,0 +1,10 @@
+Land point cloud: generated from Natural Earth 1:110m land polygons (public domain).
+Source: https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_land.geojson
+License: https://www.naturalearthdata.com/about/terms-of-use/
+Sampling: 0.75 degree latitude bands, longitude spacing adjusted by cosine of latitude.
+Radio station locations remain from the existing Radio Browser dataset; approximate locations are not geographic precision claims.
+
+City anchors: GeoNames cities15000 (downloaded 2026-10-21).
+https://download.geonames.org/export/dump/cities15000.zip
+GeoNames data is licensed CC BY 4.0: https://www.geonames.org/about.html
+Country-level station markers use deterministic illustrative city anchors, not verified station addresses.

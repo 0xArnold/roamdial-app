@@ -1,0 +1,9 @@
+{
+    "defaults":
+    {
+        "run-as": "root"
+    },
+    "username": "docker-roamdial",
+    "groupname": "docker-roamdial",
+    "join-groups": ["docker"]
+}

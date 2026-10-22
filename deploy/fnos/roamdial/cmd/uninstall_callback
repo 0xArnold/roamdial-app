@@ -1,0 +1,6 @@
+#!/bin/bash
+# 卸载后置：清理本地镜像，回收磁盘空间。
+set -u
+
+docker rmi roamdial-app:0.0.1 >/dev/null 2>&1 || true
+exit 0

@@ -1,0 +1,44 @@
+#!/bin/bash
+# 安装后置：把内置镜像装入本地 Docker（此后启动不依赖网络）。
+set -u
+
+APPDEST="${TRIM_APPDEST:-/var/apps/roamdial/target}"
+VAR_DIR="${TRIM_PKGVAR:-/var/apps/roamdial/var}"
+ERR_FILE="${TRIM_TEMP_LOGFILE:-/dev/stderr}"
+mkdir -p "${VAR_DIR}" 2>/dev/null || true
+LOG_FILE="${VAR_DIR}/roamdial-install.log"
+IMAGE_TAR="${APPDEST}/images/roamdial-image.tar"
+IMAGE="roamdial-app:0.0.1"
+
+log() { echo "$(date '+%Y-%m-%d %H:%M:%S') - $*" >> "${LOG_FILE}" 2>/dev/null || true; }
+err() { echo "$*" > "${ERR_FILE}" 2>/dev/null || echo "$*" >&2; log "ERROR: $*"; }
+
+if ! command -v docker >/dev/null 2>&1; then
+    err "系统未找到 docker，请先在 fnOS 中安装/启动 Docker。"
+    exit 1
+fi
+
+if [ ! -f "${IMAGE_TAR}" ]; then
+    err "安装包内没有镜像文件（${IMAGE_TAR}）。请重新下载完整安装包（约 97MB）。"
+    exit 1
+fi
+
+# 已在本地（重复安装/升级残留）则跳过，避免无谓的 271MB 解包
+if docker image inspect "${IMAGE}" >/dev/null 2>&1; then
+    log "image ${IMAGE} already present locally, skipping load"
+    exit 0
+fi
+
+log "loading bundled image from ${IMAGE_TAR}"
+if ! docker load -i "${IMAGE_TAR}" >> "${LOG_FILE}" 2>&1; then
+    err "镜像加载失败（docker load）。请确认存储空间充足（需约 1GB）。"
+    exit 1
+fi
+
+if ! docker image inspect "${IMAGE}" >/dev/null 2>&1; then
+    err "镜像加载后未找到 ${IMAGE}，安装包可能不完整。"
+    exit 1
+fi
+
+log "install_callback ok"
+exit 0

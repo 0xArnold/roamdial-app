@@ -1,0 +1,82 @@
+{
+  "retrievedAt": "2026-10-22T02:11:38.786Z",
+  "version": "04e0ece",
+  "placeCount": 11796,
+  "countryCount": 227,
+  "chinaPlaces": 95,
+  "source": "https://radio.garden/api/ara/content/page/Lz8ReUBi?s=1&hl=en",
+  "precision": "city",
+  "place": {
+    "id": "Lz8ReUBi",
+    "name": "Yangquan",
+    "country": "China",
+    "lng": 113.58047,
+    "lat": 37.856678
+  },
+  "stations": [
+    {
+      "url": "/listen/yangquan-traffic-radio-fm-90-1/fyhnOhZC",
+      "type": "channel",
+      "place": {
+        "id": "Lz8ReUBi",
+        "title": "Yangquan"
+      },
+      "title": "Yangquan Traffic Radio FM 90.1 阳泉交通广播",
+      "secure": true,
+      "country": {
+        "id": "gzjurICE",
+        "title": "China"
+      },
+      "preroll": false,
+      "stream": "qingting.fm"
+    },
+    {
+      "url": "/listen/fm-101-1/Mo7udKdN",
+      "type": "channel",
+      "place": {
+        "id": "Lz8ReUBi",
+        "title": "Yangquan"
+      },
+      "title": "平定综合广播 FM 101.1",
+      "secure": true,
+      "country": {
+        "id": "gzjurICE",
+        "title": "China"
+      },
+      "preroll": false,
+      "stream": "qingting.fm"
+    },
+    {
+      "url": "/listen/yangquan-music-radio-fm-93-1/MMdl3wOH",
+      "type": "channel",
+      "place": {
+        "id": "Lz8ReUBi",
+        "title": "Yangquan"
+      },
+      "title": "Yangquan Music Radio FM 93.1 阳泉最爱音乐台",
+      "secure": true,
+      "country": {
+        "id": "gzjurICE",
+        "title": "China"
+      },
+      "preroll": false,
+      "stream": "qingting.fm"
+    },
+    {
+      "url": "/listen/fm-102-7/S7YZWrG6",
+      "type": "channel",
+      "place": {
+        "id": "Lz8ReUBi",
+        "title": "Yangquan"
+      },
+      "title": "阳泉综合广播 FM 102.7",
+      "secure": true,
+      "country": {
+        "id": "gzjurICE",
+        "title": "China"
+      },
+      "preroll": false,
+      "stream": "qingting.fm"
+    }
+  ]
+}

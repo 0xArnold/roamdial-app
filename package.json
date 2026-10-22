@@ -1,0 +1,19 @@
+{
+  "name": "roamdial-app",
+  "private": true,
+  "version": "0.0.1",
+  "description": "RoamDial 复刻：React + three.js 前端，Node + SQLite 后端",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "install:all": "npm ci --prefix server && npm ci --prefix web",
+    "ingest": "cd server && npm run ingest",
+    "server": "cd server && npm start",
+    "build": "cd web && npm run build",
+    "dev": "cd web && npm run dev",
+    "test": "node --test web/src/*.test.js server/*.test.js",
+    "start": "cd server && npm start",
+    "seed": "cd server && node init-data.js"
+  }
+}

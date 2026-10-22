@@ -1,0 +1,10 @@
+.git
+**/node_modules
+**/dist
+**/*.db*
+**/*.sqlite*
+artifacts
+research
+docs
+deploy/fnos
+.env*

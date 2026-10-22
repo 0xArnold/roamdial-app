@@ -1,0 +1,16 @@
+appname               = roamdial
+version               = 0.0.1
+display_name          = RoamDial
+desc                  = 随机探索全球电台，在流派星云与点阵地球之间漫游。
+platform              = x86
+source                = thirdparty
+maintainer            = 0xArnold
+maintainer_url        = https://github.com/0xArnold
+distributor           = 0xArnold
+distributor_url       = https://github.com/0xArnold
+desktop_uidir         = ui
+desktop_applaunchname = roamdial.Application
+service_port          = 8621
+checkport             = true
+ctl_stop              = true
+disable_authorization_path = true

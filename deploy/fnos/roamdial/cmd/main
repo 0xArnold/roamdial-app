@@ -1,0 +1,93 @@
+#!/bin/bash
+# RoamDial 容器生命周期自管理（native 形态）。
+# 不用 fnOS docker-project：那个会在 install_callback 之前就 compose up，
+# 内置镜像还没 docker load，导致回退联网拉取而失败。这里由本脚本完整掌控。
+set -u
+
+PROJECT="roamdial"
+IMAGE="roamdial-app:0.0.1"
+CONTAINER="roamdial"
+APPDEST="${TRIM_APPDEST:-/var/apps/roamdial/target}"
+COMPOSE_FILE="${APPDEST}/compose/docker-compose.yaml"
+IMAGE_TAR="${APPDEST}/images/roamdial-image.tar"
+VAR_DIR="${TRIM_PKGVAR:-/var/apps/roamdial/var}"
+LOG_FILE="${VAR_DIR}/roamdial-main.log"
+ERR_FILE="${TRIM_TEMP_LOGFILE:-/dev/stderr}"
+mkdir -p "${VAR_DIR}" 2>/dev/null || true
+PORT="${TRIM_SERVICE_PORT:-8621}"
+
+log() { echo "$(date '+%Y-%m-%d %H:%M:%S') - $*" >> "${LOG_FILE}" 2>/dev/null || true; }
+err() { echo "$*" > "${ERR_FILE}" 2>/dev/null || echo "$*" >&2; log "ERROR: $*"; }
+
+compose_cmd() {
+    docker compose --project-name "${PROJECT}" --file "${COMPOSE_FILE}" "$@"
+}
+
+# 镜像不在本地时才从内置 tar 加载；已在本地则秒过
+ensure_image() {
+    if docker image inspect "${IMAGE}" >/dev/null 2>&1; then
+        log "image ${IMAGE} already present locally"
+        return 0
+    fi
+    if [ ! -f "${IMAGE_TAR}" ]; then
+        err "内置镜像包缺失：${IMAGE_TAR}。请重新下载完整安装包。"
+        return 1
+    fi
+    log "loading bundled image from ${IMAGE_TAR}"
+    if ! docker load -i "${IMAGE_TAR}" >> "${LOG_FILE}" 2>&1; then
+        err "镜像加载失败（docker load）。请检查存储空间是否充足。"
+        return 1
+    fi
+    docker image inspect "${IMAGE}" >/dev/null 2>&1
+}
+
+container_running() {
+    [ "$(docker inspect --format '{{.State.Running}}' "${CONTAINER}" 2>/dev/null)" = "true" ]
+}
+
+# 等服务就绪（fnOS checkport 需要端口真实可连）
+wait_ready() {
+    local i
+    for i in $(seq 1 40); do
+        if curl -fsS --max-time 2 "http://127.0.0.1:${PORT}/api/health" >/dev/null 2>&1; then
+            return 0
+        fi
+        sleep 1
+    done
+    return 1
+}
+
+case "${1:-}" in
+start)
+    if ! ensure_image; then
+        err "RoamDial 启动中止：内置镜像不可用。"
+        exit 1
+    fi
+    # --no-build：禁止缺失时静默联网构建；本地已有镜像，不会触发 pull
+    if ! compose_cmd up -d --no-build >> "${LOG_FILE}" 2>&1; then
+        err "容器启动失败，详情见 ${LOG_FILE}"
+        exit 1
+    fi
+    if ! wait_ready; then
+        err "服务未在预期时间内就绪，详情见 ${LOG_FILE}"
+        exit 1
+    fi
+    log "start ok"
+    exit 0
+    ;;
+stop)
+    compose_cmd stop >> "${LOG_FILE}" 2>&1 || true
+    log "stop ok"
+    exit 0
+    ;;
+status)
+    if container_running; then
+        exit 0
+    fi
+    exit 3
+    ;;
+*)
+    err "未知命令：${1:-<none>}"
+    exit 1
+    ;;
+esac

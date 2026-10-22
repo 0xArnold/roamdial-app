@@ -1,0 +1,15 @@
+#!/bin/bash
+# 卸载前置：停并移除容器（用户数据卷不动，由 fnOS 数据共享清理）。
+set -u
+
+APPDEST="${TRIM_APPDEST:-/var/apps/roamdial/target}"
+VAR_DIR="${TRIM_PKGVAR:-/var/apps/roamdial/var}"
+LOG_FILE="${VAR_DIR}/roamdial-uninstall.log"
+mkdir -p "${VAR_DIR}" 2>/dev/null || true
+COMPOSE_FILE="${APPDEST}/compose/docker-compose.yaml"
+
+docker compose \
+    --project-name roamdial \
+    --file "${COMPOSE_FILE}" \
+    down >> "${LOG_FILE}" 2>&1 || true
+exit 0

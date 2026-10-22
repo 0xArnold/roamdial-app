@@ -1,0 +1,33 @@
+# 依赖
+node_modules/
+
+# 构建产物
+web/dist/
+web/.vite/
+
+# 数据库（数据由 ingest 重新生成；如需分发可显式 add -f）
+server/*.db
+server/*.db-shm
+server/*.db-wal
+
+# 日志与临时
+*.log
+.DS_Store
+npm-debug.log*
+yarn-error.log*
+
+# 环境
+.env
+.env.*
+!.env.example
+
+# 分发产物与本地工具
+artifacts/*
+!artifacts/release-notes-v0.0.1.md
+.tools/
+*.fpk
+*.tar.gz
+# 原站参考截图不随代码发布
+docs/reference/
+# 可由只读审计脚本重新生成
+research/geonames/candidates.json

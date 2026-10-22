@@ -1,0 +1,22 @@
+#!/bin/bash
+# 设置页变更后：用现有本地镜像重建容器（不联网拉取）。
+set -u
+
+APPDEST="${TRIM_APPDEST:-/var/apps/roamdial/target}"
+VAR_DIR="${TRIM_PKGVAR:-/var/apps/roamdial/var}"
+ERR_FILE="${TRIM_TEMP_LOGFILE:-/dev/stderr}"
+mkdir -p "${VAR_DIR}" 2>/dev/null || true
+LOG_FILE="${VAR_DIR}/roamdial-config.log"
+COMPOSE_FILE="${APPDEST}/compose/docker-compose.yaml"
+IMAGE="roamdial-app:0.0.1"
+
+if ! docker image inspect "${IMAGE}" >/dev/null 2>&1; then
+    echo "本地没有镜像 ${IMAGE}，请重装应用。" > "${ERR_FILE}" 2>/dev/null || true
+    exit 1
+fi
+
+docker compose \
+    --project-name roamdial \
+    --file "${COMPOSE_FILE}" \
+    up -d --no-build --force-recreate >> "${LOG_FILE}" 2>&1
+exit $?
