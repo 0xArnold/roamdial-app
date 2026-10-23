@@ -51,7 +51,7 @@ export function Clock({ station }) {
   return (
     <div className="clock">
       <div className="ctime mono">{now ? `${String(now.h).padStart(2, '0')}:${String(now.m).padStart(2, '0')}` : '--:--'}</div>
-      <div className="cplace mono">{station.state ? `${station.state.toUpperCase()} · ` : ''}{countryName(station.cc, station.country)} · {t('local-time')}</div>
+      <div className="cplace mono">{station.state ? `${station.state.toUpperCase()} · ` : ''}{countryName(station.cc, station.country, getLang())} · {t('local-time')}</div>
     </div>
   );
 }

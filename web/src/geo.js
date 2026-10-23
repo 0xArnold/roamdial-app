@@ -107,7 +107,12 @@ export const COUNTRY_ZH = {
   MP:'北马里亚纳','WF':'瓦利斯','CX':'圣诞岛','CC':'科科斯','NF':'诺福克','TK':'托克劳','UM':'中途岛'
 };
 
-export function countryName(cc, en) {
-  if (cc && COUNTRY_ZH[cc]) return COUNTRY_ZH[cc];
+const COUNTRY_EN = typeof Intl?.DisplayNames === 'function'
+  ? new Intl.DisplayNames(['en'], { type: 'region' })
+  : null;
+
+export function countryName(cc, en, language = 'zh') {
+  if (language === 'zh' && cc && COUNTRY_ZH[cc]) return COUNTRY_ZH[cc];
+  if (language === 'en' && cc && COUNTRY_EN) return COUNTRY_EN.of(cc) || en || cc;
   return en || cc || '';
 }

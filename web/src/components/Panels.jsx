@@ -55,7 +55,7 @@ export function FilterPanel({ stats, onFilter }) {
           <select className="ddbtn" value={f.country} onChange={e => onFilter({ country: e.target.value })}>
             <option value="all">{t('all-countries')}</option>
             {Data.countries.map(c => (
-              <option key={c.cc} value={c.cc}>{flagOf(c.cc)} {countryName(c.cc)} ({fmtN(c.count)})</option>
+              <option key={c.cc} value={c.cc}>{flagOf(c.cc)} {countryName(c.cc, '', getLang())} ({fmtN(c.count)})</option>
             ))}
           </select>
         </div>
@@ -110,7 +110,7 @@ export function SearchOverlay({ query, setQuery, onPick, onClose }) {
                   <span className="sr-flag">{flagOf(r.cc)}</span>
                   <span className="sr-main">
                     <b>{r.name}</b>
-                    <i className="mono">{[r.state, countryName(r.cc, r.country)].filter(Boolean).join(' · ')} · {genreName(r.genre)}{r.bitrate ? ` · ${r.bitrate}k` : ''}</i>
+                    <i className="mono">{[r.state, countryName(r.cc, r.country, getLang())].filter(Boolean).join(' · ')} · {genreName(r.genre)}{r.bitrate ? ` · ${r.bitrate}k` : ''}</i>
                   </span>
                 </button>
               ))}
@@ -142,7 +142,7 @@ export function SavedPanel({ onPick, onClose }) {
               <span className="sr-flag">{flagOf(st.cc)}</span>
               <span className="sr-main">
                 <b>{st.name}</b>
-                <i className="mono">{countryName(st.cc, st.country)} · {genreName(st.genre)}</i>
+                <i className="mono">{countryName(st.cc, st.country, getLang())} · {genreName(st.genre)}</i>
               </span>
             </button>
           );

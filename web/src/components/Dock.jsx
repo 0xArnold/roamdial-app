@@ -1,6 +1,6 @@
 // 播放坞 + 电台拨盘
 import { useRef } from 'react';
-import { t, genreName } from '../i18n.js';
+import { t, genreName, getLang } from '../i18n.js';
 import { flagOf, countryName, localTimeAt } from '../geo.js';
 import { Data, isSaved } from '../data.js';
 import { useStore } from '../store.js';
@@ -21,7 +21,7 @@ export function Dock({ onPlay, onPrev, onNext, onSave, onShare, onMute, onVolume
   const saved = isSaved(st.id);
   const now = localTimeAt(st.cc, st.elng, Date.now());
   const timeText = now ? `${String(now.h).padStart(2, '0')}:${String(now.m).padStart(2, '0')}` : '--:--';
-  const place = [st.state, countryName(st.cc, st.country)].filter(Boolean).join(' · ');
+  const place = [st.state, countryName(st.cc, st.country, getLang())].filter(Boolean).join(' · ');
   return (
     <section className="dock">
       <div className="dstatus mono" role="status">{t(s.playerState === 'idle' ? 'locked' : s.playerState)}</div>
@@ -49,6 +49,7 @@ export function Dock({ onPlay, onPrev, onNext, onSave, onShare, onMute, onVolume
         </button>
         <button className="abtn next" onClick={onNext} title={t('next')}>
           <svg viewBox="0 0 24 24"><path d="M7 5v14l9-7z" fill="currentColor"/><rect x="16.6" y="5" width="2.4" height="14" rx="1" fill="currentColor"/></svg>
+          <span className="next-label">{t('next')}</span>
         </button>
         <span className="dsep" />
         <button className={'abtn' + (saved ? ' on' : '')} onClick={onSave} title={saved ? t('unsave') : t('save')}>

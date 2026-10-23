@@ -10,6 +10,20 @@ RoamDial is an interactive web app that organizes radio stations worldwide into 
 
 The frontend uses React, Three.js and Vite; the backend uses Node.js, Express and SQLite. A station-directory snapshot ships with the repository, so first launch does not depend on any upstream directory service.
 
+## Screenshots
+
+### English interface · United States
+
+| Globe | Genre sky |
+| --- | --- |
+| ![RoamDial globe focused on Classic Vinyl HD in New York](docs/screenshots/globe-en-us.png) | ![RoamDial genre sky focused on the Jazz and Blues cluster](docs/screenshots/genre-nebula-en-us.png) |
+
+### Chinese interface · China
+
+| Globe | Genre sky |
+| --- | --- |
+| ![RoamDial dot-matrix globe with a selected station](docs/screenshots/globe-zh.png) | ![RoamDial genre nebula with colored station clusters](docs/screenshots/genre-nebula-zh.png) |
+
 ## Features
 
 - Two views — genre nebula and globe — with particles morphed continuously by station ID.
